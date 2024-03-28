@@ -12,7 +12,7 @@
 	export let form: SuperValidated<Infer<DeleteSchema>>;
 
 	const _form = superForm(form, {
-		id: tagGroup.id.toString(),
+		id: tagGroup.id.toString() + '-delete',
 		validators: zodClient(deleteSchema),
 		onResult: ({ result }) => {
 			if (result.type === 'success') {
@@ -26,8 +26,7 @@
 
 	$: open &&
 		formData.set({
-			id: tagGroup.id,
-			tenantId: tagGroup.tenantId
+			id: tagGroup.id
 		});
 </script>
 
@@ -44,12 +43,6 @@
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
 			<form method="POST" action="?/delete" use:enhance>
-				<Form.Field form={_form} name="tenantId">
-					<Form.Control let:attrs>
-						<Input type="hidden" {...attrs} bind:value={$formData.tenantId} />
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
 				<Form.Field form={_form} name="id">
 					<Form.Control let:attrs>
 						<Input type="hidden" {...attrs} bind:value={$formData.id} />

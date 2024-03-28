@@ -1,27 +1,26 @@
 import type { PageServerLoad } from './$types';
-import { Api, type GetAllTenantsTenantDto } from '$lib/myApi';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { createSchema, deleteSchema, updateSchema } from '$lib/components/tenants/schemas';
-import { redirect } from '@sveltejs/kit';
-import { redirectIfNoItems } from '$lib';
+import { createSchema, deleteSchema, updateSchema } from '$lib/components/tag-groups/schemas';
+import { api, redirectIfNoItems } from '$lib';
+import { z } from 'zod';
 
-const { api } = new Api({
-	baseUrl: 'http://localhost:5109'
-});
+export const load: PageServerLoad = async ({ params, url }) => {
+	const page = url.searchParams.get('page') || '1';
 
-export const load: PageServerLoad = async ({ url }) => {
-	const params = url.searchParams.get('page');
+	const tenantId = await getTenantId(params);
 
-	const response = await api.tenantList({
-		PageNumber: params ? parseInt(params) : 1,
+	const response = await api.tagGroupList({
+		tenantId,
+		PageNumber: params ? parseInt(page) : 1,
 		PageSize: 5
 	});
 
-	redirectIfNoItems(response.data, '/admin/tenants');
+	redirectIfNoItems(response.data, `/${tenantId}/tag-groups`);
 
 	return {
-		tenants: response.data,
+		response: response.data,
+		tenantId,
 		forms: {
 			create: await superValidate(zod(createSchema)),
 			update: await superValidate(zod(updateSchema)),
@@ -39,7 +38,8 @@ export const actions = {
 			});
 		}
 
-		await api.tenantCreate({
+		await api.tagGroupCreate({
+			tenantId: await getTenantId(event.params),
 			name: form.data.name
 		});
 
@@ -55,10 +55,9 @@ export const actions = {
 			});
 		}
 
-		await api.tenantPartialUpdate({
+		await api.tagGroupPartialUpdate({
 			id: form.data.id,
-			name: form.data.name,
-			isActive: form.data.isActive
+			name: form.data.name
 		});
 
 		return {
@@ -67,17 +66,26 @@ export const actions = {
 	},
 	delete: async (event) => {
 		const form = await superValidate(event, zod(deleteSchema));
-
 		if (!form.valid) {
 			return fail(400, {
 				form
 			});
 		}
 
-		await api.tenantDelete(form.data.id);
+		await api.tagGroupDelete(form.data.id);
 
 		return {
 			form
 		};
 	}
 };
+
+async function getTenantId(params: { tenantId: string }) {
+	const validationSchema = z.object({
+		tenantId: z.coerce.number().gt(0)
+	});
+
+	const result = await validationSchema.parseAsync(params);
+
+	return result.tenantId;
+}

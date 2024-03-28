@@ -27,7 +27,7 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#each data.tenants.data as tenant}
+			{#each data.tenants.items as tenant}
 				<Table.Row>
 					<Table.Cell class="font-medium">{tenant.id}</Table.Cell>
 					<Table.Cell>

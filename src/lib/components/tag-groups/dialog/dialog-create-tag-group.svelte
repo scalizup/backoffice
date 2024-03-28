@@ -10,19 +10,19 @@
 
 	let open = false;
 
-	export let createForm: SuperValidated<Infer<CreateSchema>>;
+	export let form: SuperValidated<Infer<CreateSchema>>;
 
-	const form = superForm(createForm, {
+	const _form = superForm(form, {
 		validators: zodClient(createSchema),
 		onResult: ({ result }) => {
 			if (result.type === 'success') {
 				open = false;
-				toast.success(`Tag Group ${$formData.name} has been successfully created.`);
+				toast.success(`Tag Group ${$formData.name} has been created.`);
 			}
 		}
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance } = _form;
 </script>
 
 <Button on:click={() => (open = true)}>Create a Tag Group</Button>
@@ -32,7 +32,7 @@
 			<Dialog.Title>Create a new Tag Group</Dialog.Title>
 			<Dialog.Description>Please enter the name of the new group.</Dialog.Description>
 			<form method="POST" action="?/create" use:enhance>
-				<Form.Field {form} name="name">
+				<Form.Field form={_form} name="name">
 					<Form.Control let:attrs>
 						<Form.Label>Tag Group Name</Form.Label>
 						<Input {...attrs} bind:value={$formData.name} placeholder="ingridients..." />

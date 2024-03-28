@@ -1,17 +1,20 @@
-<!-- <script lang="ts">
+<script lang="ts">
 	import * as Table from '$lib/components/ui/table';
-	import TableCellTenantName from '$lib/components/tenants/table/table-cell-tenant-name.svelte';
-	import type { GetAllTenantsTenantDtoDomainVersion1000CultureNeutralPublicKeyTokenNull } from '$lib/myApi';
+	import type { GetAllTagGroupsTagGroupDtoDomainVersion1000CultureNeutralPublicKeyTokenNull } from '$lib/myApi';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-	import type { DeleteSchema, UpdateSchema } from '../schemas';
+	import type { CreateSchema, DeleteSchema, UpdateSchema } from '../schemas';
 	import TableCellTagGroupEntities from './table-cell-tag-group-entities.svelte';
+	import DialogCreateTagGroup from '../dialog/dialog-create-tag-group.svelte';
+	import TableCellTagGroupActions from './table-cell-tag-group-actions.svelte';
 
 	export let data: {
-		tenants: GetAllTenantsTenantDtoDomainVersion1000CultureNeutralPublicKeyTokenNull;
+		response: GetAllTagGroupsTagGroupDtoDomainVersion1000CultureNeutralPublicKeyTokenNull;
 		forms: {
+			create: SuperValidated<Infer<CreateSchema>>;
 			update: SuperValidated<Infer<UpdateSchema>>;
 			delete: SuperValidated<Infer<DeleteSchema>>;
 		};
+		tenantId: number;
 	};
 </script>
 
@@ -26,20 +29,23 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#each data.tenants.data as tenant}
+			{#each data.response.items as tagGroup}
 				<Table.Row>
-					<Table.Cell class="font-medium">{tenant.id}</Table.Cell>
+					<Table.Cell class="font-medium">{tagGroup.id}</Table.Cell>
+					<Table.Cell>{tagGroup.name}</Table.Cell>
 					<Table.Cell>
-						<TableCellTenantName name={tenant.name} isActive={tenant.isActive} />
-					</Table.Cell>
-					<Table.Cell>
-						<TableCellTagGroupEntities tenantId={tenant.id} />
+						<TableCellTagGroupEntities
+							data={{
+								tenantId: data.tenantId,
+								tagGroupId: tagGroup.id
+							}}
+						/>
 					</Table.Cell>
 					<Table.Cell class="text-right">
-						<TableCellTagGroupEntities {tenant} forms={data.forms} />
+						<TableCellTagGroupActions {tagGroup} forms={data.forms} />
 					</Table.Cell>
 				</Table.Row>
 			{/each}
 		</Table.Body>
 	</Table.Root>
-</div> -->
+</div>

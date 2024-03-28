@@ -12,6 +12,7 @@
 	export let form: SuperValidated<Infer<UpdateSchema>>;
 
 	const _form = superForm(form, {
+		id: tagGroup.id.toString() + '-update',
 		validators: zodClient(updateSchema),
 		onResult: ({ result }) => {
 			if (result.type === 'success') {
@@ -26,8 +27,7 @@
 	$: open &&
 		formData.set({
 			id: tagGroup.id,
-			name: tagGroup.name,
-			tenantId: tagGroup.tenantId
+			name: tagGroup.name
 		});
 </script>
 
@@ -40,13 +40,6 @@
 				all related tags associated with it.
 			</Dialog.Description>
 			<form method="POST" action="?/update" use:enhance>
-				<Form.Field form={_form} name="tenantId">
-					<Form.Control let:attrs>
-						<Input {...attrs} type="hidden" bind:value={tagGroup.tenantId} />
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
-
 				<Form.Field form={_form} name="id">
 					<Form.Control let:attrs>
 						<Input {...attrs} type="hidden" bind:value={tagGroup.id} />

@@ -6,9 +6,9 @@
 	import type { DeleteSchema, UpdateSchema } from '../schemas';
 	import DialogDeleteTagGroup from '../dialog/dialog-delete-tag-group.svelte';
 	import DialogUpdateTagGroup from '../dialog/dialog-update-tag-group.svelte';
+	import type { GetAllTagGroupsTagGroupDto } from '$lib/myApi';
 
-	// TODO: Import the dialog components
-	export let tagGroup: any;
+	export let tagGroup: GetAllTagGroupsTagGroupDto;
 	export let forms: {
 		update: SuperValidated<Infer<UpdateSchema>>;
 		delete: SuperValidated<Infer<DeleteSchema>>;

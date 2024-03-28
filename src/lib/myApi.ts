@@ -9,8 +9,34 @@
  * ---------------------------------------------------------------
  */
 
+export interface CreateTagGroupCommand {
+	/** @format int32 */
+	tenantId?: number;
+	name?: string;
+}
+
 export interface CreateTenantCommand {
 	name?: string;
+}
+
+export interface GetAllTagGroupsTagGroupDto {
+	/** @format int32 */
+	id: number;
+	name: string;
+}
+
+export interface GetAllTagGroupsTagGroupDtoDomainVersion1000CultureNeutralPublicKeyTokenNull {
+	/** @format int32 */
+	currentPage: number;
+	/** @format int32 */
+	pageSize: number;
+	/** @format int32 */
+	totalItems: number;
+	/** @format int32 */
+	totalPages: number;
+	items: GetAllTagGroupsTagGroupDto[];
+	hasPreviousPage: boolean;
+	hasNextPage: boolean;
 }
 
 export interface GetAllTenantsTenantDto {
@@ -24,19 +50,21 @@ export interface GetAllTenantsTenantDtoDomainVersion1000CultureNeutralPublicKeyT
 	/** @format int32 */
 	currentPage: number;
 	/** @format int32 */
-	totalEntities: number;
+	pageSize: number;
+	/** @format int32 */
+	totalItems: number;
 	/** @format int32 */
 	totalPages: number;
-	data: GetAllTenantsTenantDto[];
+	items: GetAllTenantsTenantDto[];
 	hasPreviousPage: boolean;
 	hasNextPage: boolean;
 }
 
 export interface GetTenantByIdTenantDto {
 	/** @format int32 */
-	id?: number;
-	name?: string | null;
-	isActive?: boolean;
+	id: number;
+	name: string;
+	isActive: boolean;
 }
 
 export interface MicrosoftAspNetCoreMvcProblemDetails {
@@ -47,6 +75,12 @@ export interface MicrosoftAspNetCoreMvcProblemDetails {
 	detail?: string | null;
 	instance?: string | null;
 	[key: string]: any;
+}
+
+export interface UpdateTagGroupCommand {
+	/** @format int32 */
+	id?: number;
+	name?: string | null;
 }
 
 export interface UpdateTenantCommand {
@@ -284,6 +318,82 @@ export class HttpClient<SecurityDataType = unknown> {
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
 	api = {
+		/**
+		 * No description
+		 *
+		 * @tags TagGroup
+		 * @name TagGroupCreate
+		 * @request POST:/api/TagGroup
+		 */
+		tagGroupCreate: (data: CreateTagGroupCommand, params: RequestParams = {}) =>
+			this.request<number, MicrosoftAspNetCoreMvcProblemDetails>({
+				path: `/api/TagGroup`,
+				method: 'POST',
+				body: data,
+				type: ContentType.Json,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags TagGroup
+		 * @name TagGroupList
+		 * @request GET:/api/TagGroup
+		 */
+		tagGroupList: (
+			query?: {
+				/** @format int32 */
+				PageNumber?: number;
+				/** @format int32 */
+				PageSize?: number;
+				/** @format int32 */
+				tenantId?: number;
+			},
+			params: RequestParams = {}
+		) =>
+			this.request<
+				GetAllTagGroupsTagGroupDtoDomainVersion1000CultureNeutralPublicKeyTokenNull,
+				MicrosoftAspNetCoreMvcProblemDetails
+			>({
+				path: `/api/TagGroup`,
+				method: 'GET',
+				query: query,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags TagGroup
+		 * @name TagGroupPartialUpdate
+		 * @request PATCH:/api/TagGroup
+		 */
+		tagGroupPartialUpdate: (data: UpdateTagGroupCommand, params: RequestParams = {}) =>
+			this.request<void, MicrosoftAspNetCoreMvcProblemDetails>({
+				path: `/api/TagGroup`,
+				method: 'PATCH',
+				body: data,
+				type: ContentType.Json,
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags TagGroup
+		 * @name TagGroupDelete
+		 * @request DELETE:/api/TagGroup/{id}
+		 */
+		tagGroupDelete: (id: number, params: RequestParams = {}) =>
+			this.request<void, MicrosoftAspNetCoreMvcProblemDetails>({
+				path: `/api/TagGroup/${id}`,
+				method: 'DELETE',
+				...params
+			}),
+
 		/**
 		 * No description
 		 *
