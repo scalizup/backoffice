@@ -6,13 +6,14 @@
 	import { Input } from '$lib/components/ui/input';
 	import { toast } from 'svelte-sonner';
 	import { updateSchema, type UpdateSchema } from '../schemas';
+	import type { GetAllTagsTagDto } from '$lib/myApi';
 
 	export let open: boolean;
-	export let tagGroup: any;
+	export let tag: GetAllTagsTagDto;
 	export let form: SuperValidated<Infer<UpdateSchema>>;
 
 	const _form = superForm(form, {
-		id: tagGroup.id.toString() + '-update',
+		id: tag.id.toString() + '-update',
 		validators: zodClient(updateSchema),
 		onResult: ({ result }) => {
 			if (result.type === 'success') {
@@ -26,15 +27,15 @@
 
 	$: open &&
 		formData.set({
-			id: tagGroup.id,
-			name: tagGroup.name
+			id: tag.id,
+			name: tag.name
 		});
 </script>
 
 <Dialog.Root bind:open>
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>Update tag group {tagGroup.name}</Dialog.Title>
+			<Dialog.Title>Update tag {tag.name}</Dialog.Title>
 			<Dialog.Description>
 				Modify the details of the tag group. Please note that updating this tag group will affect
 				all related tags associated with it.
@@ -42,14 +43,14 @@
 			<form method="POST" action="?/update" use:enhance>
 				<Form.Field form={_form} name="id">
 					<Form.Control let:attrs>
-						<Input {...attrs} type="hidden" bind:value={tagGroup.id} />
+						<Input {...attrs} type="hidden" bind:value={tag.id} />
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>
 
 				<Form.Field form={_form} name="name">
 					<Form.Control let:attrs>
-						<Form.Label>Tag Group Name</Form.Label>
+						<Form.Label>Tag Name</Form.Label>
 						<Input {...attrs} bind:value={$formData.name} />
 					</Form.Control>
 					<Form.FieldErrors />
@@ -57,7 +58,7 @@
 
 				<div class="flex items-end justify-between">
 					<span class="text-sm font-thin text-slate-500">
-						({tagGroup.id})
+						({tag.id})
 					</span>
 					<Form.Button>Update</Form.Button>
 				</div>

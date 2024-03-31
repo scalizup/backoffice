@@ -3,7 +3,6 @@ import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { createSchema, deleteSchema, updateSchema } from '$lib/components/tag-groups/schemas';
 import { api, getTenantId, redirectIfNoItems } from '$lib';
-import { z } from 'zod';
 
 export const load: PageServerLoad = async ({ params, url }) => {
 	const page = url.searchParams.get('page') || '1';

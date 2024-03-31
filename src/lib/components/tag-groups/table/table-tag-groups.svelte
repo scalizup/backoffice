@@ -1,14 +1,13 @@
 <script lang="ts">
 	import * as Table from '$lib/components/ui/table';
-	import type { GetAllTagGroupsTagGroupDtoDomainVersion1000CultureNeutralPublicKeyTokenNull } from '$lib/myApi';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { CreateSchema, DeleteSchema, UpdateSchema } from '../schemas';
 	import TableCellTagGroupEntities from './table-cell-tag-group-entities.svelte';
-	import DialogCreateTagGroup from '../dialog/dialog-create-tag-group.svelte';
 	import TableCellTagGroupActions from './table-cell-tag-group-actions.svelte';
+	import type { GetAllTagGroupsPaginated } from '$lib/data-contracts';
 
 	export let data: {
-		response: GetAllTagGroupsTagGroupDtoDomainVersion1000CultureNeutralPublicKeyTokenNull;
+		response: GetAllTagGroupsPaginated;
 		forms: {
 			create: SuperValidated<Infer<CreateSchema>>;
 			update: SuperValidated<Infer<UpdateSchema>>;

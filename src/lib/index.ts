@@ -1,8 +1,8 @@
 import { redirect } from '@sveltejs/kit';
-import { Api } from './myApi';
 import { z } from 'zod';
+import { Api } from './Api';
 
-const { api } = new Api({
+const api = new Api({
 	baseUrl: 'http://localhost:5109'
 });
 

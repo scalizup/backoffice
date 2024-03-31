@@ -4,9 +4,9 @@
 	import { Button } from '$lib/components/ui/button';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { DeleteSchema, UpdateSchema } from '../schemas';
-	// import DialogDeleteTag from '../dialog/dialog-delete-tag.svelte';
-	// import DialogUpdateTag from '../dialog/dialog-update-tag.svelte';
 	import type { GetAllTagsTagDto } from '$lib/myApi';
+	import DialogDeleteTag from '../dialog/dialog-delete-tag.svelte';
+	import DialogUpdateTag from '../dialog/dialog-update-tag.svelte';
 
 	export let tag: GetAllTagsTagDto;
 	export let forms: {
@@ -20,8 +20,8 @@
 	};
 </script>
 
-<!-- <DialogDeleteTagGroup bind:open={actions.delete} {tagGroup} form={forms.delete} />
-<DialogUpdateTagGroup bind:open={actions.update} {tagGroup} form={forms.update} /> -->
+<DialogDeleteTag bind:open={actions.delete} {tag} form={forms.delete} />
+<DialogUpdateTag bind:open={actions.update} {tag} form={forms.update} />
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger asChild let:builder>

@@ -6,17 +6,18 @@
 	import { Input } from '$lib/components/ui/input';
 	import { toast } from 'svelte-sonner';
 	import { deleteSchema, type DeleteSchema } from '../schemas';
+	import type { GetAllTagsTagDto } from '$lib/myApi';
 
 	export let open: boolean;
-	export let tagGroup: any;
+	export let tag: GetAllTagsTagDto;
 	export let form: SuperValidated<Infer<DeleteSchema>>;
 
 	const _form = superForm(form, {
-		id: tagGroup.id.toString() + '-delete',
+		id: tag.id.toString() + '-delete',
 		validators: zodClient(deleteSchema),
 		onResult: ({ result }) => {
 			if (result.type === 'success') {
-				toast.error(`Tag group ${tagGroup.name} (${tagGroup.id}) has been deleted.`);
+				toast.error(`Tag group ${tag.name} (${tag.id}) has been deleted.`);
 				open = false;
 			}
 		}
@@ -26,7 +27,7 @@
 
 	$: open &&
 		formData.set({
-			id: tagGroup.id
+			id: tag.id
 		});
 </script>
 
@@ -34,11 +35,10 @@
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>
-				Are you sure you want to delete the tag group {tagGroup.name}?
+				Are you sure you want to delete the tag {tag.name}?
 			</AlertDialog.Title>
 			<AlertDialog.Description>
-				This action cannot be undone. Deleting this tag group will also delete all the tags
-				associated with it.
+				This action cannot be undone. Deleting this tag will also delete all the products related.
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>

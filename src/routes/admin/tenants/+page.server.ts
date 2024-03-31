@@ -1,14 +1,8 @@
 import type { PageServerLoad } from './$types';
-import { Api, type GetAllTenantsTenantDto } from '$lib/myApi';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { createSchema, deleteSchema, updateSchema } from '$lib/components/tenants/schemas';
-import { redirect } from '@sveltejs/kit';
-import { redirectIfNoItems } from '$lib';
-
-const { api } = new Api({
-	baseUrl: 'http://localhost:5109'
-});
+import { api, redirectIfNoItems } from '$lib';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const params = url.searchParams.get('page');
