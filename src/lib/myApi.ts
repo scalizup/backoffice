@@ -9,14 +9,22 @@
  * ---------------------------------------------------------------
  */
 
+export interface CreateTagCommand {
+	/** @format int32 */
+	tenantId: number;
+	/** @format int32 */
+	tagGroupId: number;
+	name: string;
+}
+
 export interface CreateTagGroupCommand {
 	/** @format int32 */
-	tenantId?: number;
-	name?: string;
+	tenantId: number;
+	name: string;
 }
 
 export interface CreateTenantCommand {
-	name?: string;
+	name: string;
 }
 
 export interface GetAllTagGroupsTagGroupDto {
@@ -35,6 +43,26 @@ export interface GetAllTagGroupsTagGroupDtoDomainVersion1000CultureNeutralPublic
 	/** @format int32 */
 	totalPages: number;
 	items: GetAllTagGroupsTagGroupDto[];
+	hasPreviousPage: boolean;
+	hasNextPage: boolean;
+}
+
+export interface GetAllTagsTagDto {
+	/** @format int32 */
+	id: number;
+	name: string;
+}
+
+export interface GetAllTagsTagDtoDomainVersion1000CultureNeutralPublicKeyTokenNull {
+	/** @format int32 */
+	currentPage: number;
+	/** @format int32 */
+	pageSize: number;
+	/** @format int32 */
+	totalItems: number;
+	/** @format int32 */
+	totalPages: number;
+	items: GetAllTagsTagDto[];
 	hasPreviousPage: boolean;
 	hasNextPage: boolean;
 }
@@ -68,13 +96,19 @@ export interface GetTenantByIdTenantDto {
 }
 
 export interface MicrosoftAspNetCoreMvcProblemDetails {
-	type?: string | null;
-	title?: string | null;
+	type: string | null;
+	title: string | null;
 	/** @format int32 */
-	status?: number | null;
-	detail?: string | null;
-	instance?: string | null;
+	status: number | null;
+	detail: string | null;
+	instance: string | null;
 	[key: string]: any;
+}
+
+export interface UpdateTagCommand {
+	/** @format int32 */
+	id?: number;
+	name?: string | null;
 }
 
 export interface UpdateTagGroupCommand {
@@ -321,6 +355,82 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		/**
 		 * No description
 		 *
+		 * @tags Tag
+		 * @name PostApi
+		 * @request POST:/api/Tag
+		 */
+		postApi: (data: CreateTagCommand, params: RequestParams = {}) =>
+			this.request<number, MicrosoftAspNetCoreMvcProblemDetails>({
+				path: `/api/Tag`,
+				method: 'POST',
+				body: data,
+				type: ContentType.Json,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Tag
+		 * @name GetApi
+		 * @request GET:/api/Tag
+		 */
+		getApi: (
+			query?: {
+				/** @format int32 */
+				PageNumber?: number;
+				/** @format int32 */
+				PageSize?: number;
+				/** @format int32 */
+				tagGroupId?: number;
+			},
+			params: RequestParams = {}
+		) =>
+			this.request<
+				GetAllTagsTagDtoDomainVersion1000CultureNeutralPublicKeyTokenNull,
+				MicrosoftAspNetCoreMvcProblemDetails
+			>({
+				path: `/api/Tag`,
+				method: 'GET',
+				query: query,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Tag
+		 * @name PatchApi
+		 * @request PATCH:/api/Tag
+		 */
+		patchApi: (data: UpdateTagCommand, params: RequestParams = {}) =>
+			this.request<void, MicrosoftAspNetCoreMvcProblemDetails>({
+				path: `/api/Tag`,
+				method: 'PATCH',
+				body: data,
+				type: ContentType.Json,
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Tag
+		 * @name DeleteApi
+		 * @request DELETE:/api/Tag/{id}
+		 */
+		deleteApi: (id: number, params: RequestParams = {}) =>
+			this.request<void, MicrosoftAspNetCoreMvcProblemDetails>({
+				path: `/api/Tag/${id}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
 		 * @tags TagGroup
 		 * @name TagGroupCreate
 		 * @request POST:/api/TagGroup
@@ -343,13 +453,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/TagGroup
 		 */
 		tagGroupList: (
-			query?: {
+			query: {
 				/** @format int32 */
-				PageNumber?: number;
+				PageNumber: number;
 				/** @format int32 */
-				PageSize?: number;
+				PageSize: number;
 				/** @format int32 */
-				tenantId?: number;
+				tenantId: number;
 			},
 			params: RequestParams = {}
 		) =>
@@ -419,11 +529,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Tenant
 		 */
 		tenantList: (
-			query?: {
+			query: {
 				/** @format int32 */
-				PageNumber?: number;
+				PageNumber: number;
 				/** @format int32 */
-				PageSize?: number;
+				PageSize: number;
 			},
 			params: RequestParams = {}
 		) =>
