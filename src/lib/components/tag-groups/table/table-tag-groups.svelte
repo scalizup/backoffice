@@ -13,7 +13,6 @@
 			update: SuperValidated<Infer<UpdateSchema>>;
 			delete: SuperValidated<Infer<DeleteSchema>>;
 		};
-		tenantId: number;
 	};
 </script>
 
@@ -35,7 +34,6 @@
 					<Table.Cell>
 						<TableCellTagGroupEntities
 							data={{
-								tenantId: data.tenantId,
 								tagGroupId: tagGroup.id
 							}}
 						/>

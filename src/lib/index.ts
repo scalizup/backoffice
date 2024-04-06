@@ -12,16 +12,6 @@ const redirectIfNoItems = (response: { currentPage: number; items: any[] }, url:
 	}
 };
 
-const getTenantId = async (params: { tenantId: string }) => {
-	const validationSchema = z.object({
-		tenantId: z.coerce.number().gt(0)
-	});
-
-	const result = await validationSchema.parseAsync(params);
-
-	return result.tenantId;
-};
-
 const getTagGroupId = async (params: { tagGroupId: string }) => {
 	const validationSchema = z.object({
 		tagGroupId: z.coerce.number().gt(0)
@@ -32,4 +22,4 @@ const getTagGroupId = async (params: { tagGroupId: string }) => {
 	return result.tagGroupId;
 };
 
-export { api, redirectIfNoItems, getTenantId, getTagGroupId };
+export { api, redirectIfNoItems, getTagGroupId };

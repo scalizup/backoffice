@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { SquareStack } from 'lucide-svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-
-	export let tenantId: number;
 </script>
 
 <div class="flex items-center gap-4">

@@ -12,7 +12,6 @@
 			update: SuperValidated<Infer<UpdateSchema>>;
 			delete: SuperValidated<Infer<DeleteSchema>>;
 		};
-		tenantId: number;
 	};
 </script>
 

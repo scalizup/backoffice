@@ -9,22 +9,93 @@
  * ---------------------------------------------------------------
  */
 
+export interface AddUserToRoleCommand {
+	/** @format int32 */
+	userId?: number;
+	name?: string;
+}
+
+export interface AddUserToTenantCommand {
+	/** @format int32 */
+	userId?: number;
+	/** @format int32 */
+	tenantId?: number;
+}
+
+export interface ApplicationCommonInterfacesIUser {
+	/** @format int32 */
+	id?: number | null;
+	requestIp?: string;
+	refreshToken?: string;
+}
+
+export interface CreateRoleCommand {
+	name?: string;
+}
+
 export interface CreateTagCommand {
+	user?: ApplicationCommonInterfacesIUser;
 	/** @format int32 */
-	tenantId: number;
+	tenantId?: number;
 	/** @format int32 */
-	tagGroupId: number;
-	name: string;
+	tagGroupId?: number;
+	name?: string;
 }
 
 export interface CreateTagGroupCommand {
+	user?: ApplicationCommonInterfacesIUser;
 	/** @format int32 */
-	tenantId: number;
-	name: string;
+	tenantId?: number;
+	name?: string;
 }
 
 export interface CreateTenantCommand {
-	name: string;
+	name?: string;
+}
+
+export interface DomainEntitiesRole {
+	/** @format int32 */
+	id?: number;
+	name?: string;
+	users?: DomainEntitiesUser[];
+}
+
+export interface DomainEntitiesTag {
+	/** @format int32 */
+	id?: number;
+	/** @format int32 */
+	tenantId?: number;
+	name?: string;
+	/** @format int32 */
+	tagGroupId?: number;
+	tagGroup?: DomainEntitiesTagGroup;
+}
+
+export interface DomainEntitiesTagGroup {
+	/** @format int32 */
+	id?: number;
+	/** @format int32 */
+	tenantId?: number;
+	name?: string;
+	tags?: DomainEntitiesTag[];
+}
+
+export interface DomainEntitiesTenant {
+	/** @format int32 */
+	id?: number;
+	name?: string;
+	isActive?: boolean;
+	tagGroups?: DomainEntitiesTagGroup[];
+	users?: DomainEntitiesUser[];
+}
+
+export interface DomainEntitiesUser {
+	/** @format int32 */
+	id?: number;
+	username?: string;
+	password?: string;
+	roles?: DomainEntitiesRole[];
+	availableTenants?: DomainEntitiesTenant[];
 }
 
 export interface GetAllTagGroupsPaginated {
@@ -101,6 +172,11 @@ export interface GetTenantByIdTenantDto {
 	isActive: boolean;
 }
 
+export interface LoginUserCommand {
+	username: string;
+	password: string;
+}
+
 export interface MicrosoftAspNetCoreMvcProblemDetails {
 	type: string | null;
 	title: string | null;
@@ -111,21 +187,37 @@ export interface MicrosoftAspNetCoreMvcProblemDetails {
 	[key: string]: any;
 }
 
+export interface RefreshUserTokenCommand {
+	accessToken: string;
+	refreshToken: string;
+}
+
+export interface RegisterUserCommand {
+	username?: string;
+	password?: string;
+}
+
 export interface UpdateTagCommand {
+	user?: ApplicationCommonInterfacesIUser;
 	/** @format int32 */
-	id: number;
+	tenantId?: number;
+	/** @format int32 */
+	id?: number;
 	name?: string | null;
 }
 
 export interface UpdateTagGroupCommand {
+	user?: ApplicationCommonInterfacesIUser;
 	/** @format int32 */
-	id: number;
+	tenantId?: number;
+	/** @format int32 */
+	id?: number;
 	name?: string | null;
 }
 
 export interface UpdateTenantCommand {
 	/** @format int32 */
-	id: number;
+	id?: number;
 	name?: string | null;
 	isActive?: boolean | null;
 }

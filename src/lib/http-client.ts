@@ -124,8 +124,8 @@ export class HttpClient<SecurityDataType = unknown> {
 					property instanceof Blob
 						? property
 						: typeof property === 'object' && property !== null
-						? JSON.stringify(property)
-						: `${property}`
+							? JSON.stringify(property)
+							: `${property}`
 				);
 				return formData;
 			}, new FormData()),
@@ -168,9 +168,17 @@ export class HttpClient<SecurityDataType = unknown> {
 		}
 	};
 
-	public request = async <T = any, E = any>(
-		{ body, secure, path, type, query, format, baseUrl, cancelToken, ...params }: FullRequestParams
-	): Promise<HttpResponse<T, E>> => {
+	public request = async <T = any, E = any>({
+		body,
+		secure,
+		path,
+		type,
+		query,
+		format,
+		baseUrl,
+		cancelToken,
+		...params
+	}: FullRequestParams): Promise<HttpResponse<T, E>> => {
 		const secureParams =
 			((typeof secure === 'boolean' ? secure : this.baseApiParams.secure) &&
 				this.securityWorker &&

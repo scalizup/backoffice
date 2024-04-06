@@ -12,7 +12,7 @@
 	};
 </script>
 
-<Pagination.Root class="py-4" count={data.totalItems} perPage={data.pageSize} let:pages>
+<Pagination.Root count={data.totalItems} perPage={data.pageSize} let:pages>
 	<Pagination.Content>
 		<Pagination.Item>
 			<Pagination.PrevButton

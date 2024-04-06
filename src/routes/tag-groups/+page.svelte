@@ -6,7 +6,7 @@
 	export let data;
 </script>
 
-<div class="mb-3 flex justify-between">
+<div class="flex justify-between">
 	<div>
 		<span class="font-bold">Tag Groups Management</span>
 	</div>
@@ -17,5 +17,8 @@
 	<div class="flex justify-center font-semibold">No tag groups created yet!</div>
 {:else}
 	<TableTagGroups {data} />
-	<TablePagination data={data.response} />
+
+	<div class="ml-auto flex justify-end">
+		<TablePagination data={data.response} />
+	</div>
 {/if}
