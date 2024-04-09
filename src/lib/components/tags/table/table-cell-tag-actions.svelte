@@ -4,9 +4,9 @@
 	import { Button } from '$lib/components/ui/button';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { DeleteSchema, UpdateSchema } from '../schemas';
-	import type { GetAllTagsTagDto } from '$lib/myApi';
 	import DialogDeleteTag from '../dialog/dialog-delete-tag.svelte';
 	import DialogUpdateTag from '../dialog/dialog-update-tag.svelte';
+	import type { GetAllTagsTagDto } from '$lib/data-contracts';
 
 	export let tag: GetAllTagsTagDto;
 	export let forms: {

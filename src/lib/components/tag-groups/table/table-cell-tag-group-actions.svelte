@@ -6,7 +6,7 @@
 	import type { DeleteSchema, UpdateSchema } from '../schemas';
 	import DialogDeleteTagGroup from '../dialog/dialog-delete-tag-group.svelte';
 	import DialogUpdateTagGroup from '../dialog/dialog-update-tag-group.svelte';
-	import type { GetAllTagGroupsTagGroupDto } from '$lib/myApi';
+	import type { GetAllTagGroupsTagGroupDto } from '$lib/data-contracts';
 
 	export let tagGroup: GetAllTagGroupsTagGroupDto;
 	export let forms: {

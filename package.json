@@ -39,6 +39,7 @@
 		"axios": "^1.6.8",
 		"bits-ui": "^0.21.2",
 		"clsx": "^2.1.0",
+		"cmdk-sv": "^0.0.17",
 		"formsnap": "^0.5.1",
 		"lucide-svelte": "^0.363.0",
 		"svelte-radix": "^1.1.0",

@@ -7,8 +7,10 @@
 	export let icon: any;
 	export let isMobile = false;
 
-	function isActive() {
-		return $page.url.pathname.includes(href);
+	let isActive = false;
+
+	$: {
+		isActive = $page.url.pathname.includes(href);
 	}
 </script>
 
@@ -18,8 +20,8 @@
 		class={clsx(
 			'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2  hover:text-foreground',
 			{
-				'bg-muted text-foreground': isActive(),
-				'text-muted-foreground': !isActive()
+				'bg-muted text-foreground': isActive,
+				'text-muted-foreground': !isActive
 			}
 		)}
 	>
@@ -32,7 +34,7 @@
 		class={clsx(
 			'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
 			{
-				'bg-muted text-primary': isActive()
+				'bg-muted text-primary': isActive
 			}
 		)}
 	>

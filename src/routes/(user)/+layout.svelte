@@ -14,9 +14,9 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import Navlink from './navlink.svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
+	import Navlink from './navlink.svelte';
 </script>
 
 <Toaster richColors />
@@ -37,7 +37,7 @@
 			<div class="flex-1">
 				<nav class="grid items-start px-2 text-sm font-medium lg:px-4">
 					<Navlink href="/tag-groups" title="Tag Groups" icon={Home} />
-					<Navlink href="/tags" title="Tags" icon={Package} />
+					<!-- <Navlink href="/tags" title="Tags" icon={Package} /> -->
 					<Navlink href="/products" title="Products" icon={ShoppingCart} />
 					<!-- <Navlink href="/customers" title="Customers" icon={Users} />
 					<Navlink href="/analytics" title="Analytics" icon={LineChart} /> -->
@@ -91,18 +91,7 @@
 					</div>
 				</Sheet.Content>
 			</Sheet.Root>
-			<div class="w-full flex-1">
-				<form>
-					<div class="relative">
-						<Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
-							type="search"
-							placeholder="Search products..."
-							class="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-						/>
-					</div>
-				</form>
-			</div>
+			<div class="flex-1"></div>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button builders={[builder]} variant="secondary" size="icon" class="rounded-full">
