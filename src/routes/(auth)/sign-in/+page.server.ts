@@ -1,8 +1,9 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad, Actions } from './$types';
-import { api } from '$lib';
 import { signInSchema } from '$lib/schemas/auth_schemas';
+import { signIn } from '$lib/api/contracts/auth/commands/signIn';
+import { setAuthorizationCookies } from '$lib/helpers/setAuthorizationCookies';
 
 export const load: PageServerLoad = async () => {
 	return {
@@ -13,17 +14,11 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	signIn: async ({ request, locals, cookies, setHeaders }) => {
-		const form = await superValidate(request, zod(signInSchema));
+	signIn: async (event) => {
+		const form = await superValidate(event.request, zod(signInSchema));
 
-		const response = await api.usersLoginCreate(form.data);
+		const { accessToken, refreshToken } = await signIn(form.data);
 
-		cookies.set('Authorization', `Bearer ${response.data.token}`, {
-			path: '/'
-		});
-
-		cookies.set('RefreshToken', response.data.refreshToken, {
-			path: '/'
-		});
+		setAuthorizationCookies(event, accessToken, refreshToken);
 	}
 };

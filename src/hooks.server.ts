@@ -1,7 +1,10 @@
-import { api } from '$lib';
-import { redirect, type Handle } from '@sveltejs/kit';
+import { refreshTokens } from '$lib/api/contracts/auth/commands/refreshTokens';
+import api from '$lib/api/contracts/common/api';
+import paths from '$lib/api/contracts/common/paths';
+import { setAuthorizationCookies } from '$lib/helpers/setAuthorizationCookies';
+import { redirect, type Handle, type RequestEvent } from '@sveltejs/kit';
 
-const unProtectedRoutes: string[] = ['/sign-in', '/sign-up', '/forgot-password', '/reset-password'];
+const unProtectedRoutes: string[] = [paths.auth.signIn];
 
 const parseJwt = (token: string) => {
 	token = token.replace('Bearer ', '');
@@ -17,52 +20,37 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.accessToken = event.cookies.get('Authorization') as string;
 	event.locals.refreshToken = event.cookies.get('RefreshToken') as string;
 
+	const isLoggedIn = event.locals.accessToken != null && event.locals.refreshToken != null;
 	const isPublicPath = unProtectedRoutes.includes(event.url.pathname);
-	const isLoggedIn = event.locals.accessToken && event.locals.refreshToken;
-
 	if (!isLoggedIn && !isPublicPath) {
-		return redirect(303, '/sign-in');
+		return redirect(303, paths.auth.signIn);
 	}
 
 	if (isLoggedIn) {
+		await validateAndUpdateTokens(event);
+
 		if (isPublicPath) {
-			return redirect(303, '/tag-groups');
+			return redirect(303, paths.tagGroups);
 		}
 
-		const accessTokenTime = parseJwt(event.locals.accessToken).exp;
-		if (accessTokenTime && accessTokenTime < Date.now() / 1000) {
-			try {
-				const refreshTokens = await api.usersRefreshCreate({
-					accessToken: event.locals.accessToken,
-					refreshToken: event.locals.refreshToken
-				});
-
-				event.locals.accessToken = refreshTokens.accessToken;
-				event.locals.refreshToken = refreshTokens.refreshToken;
-
-				event.cookies.set('Authorization', `Bearer ${refreshTokens.accessToken}`, {
-					path: '/'
-				});
-				event.cookies.set('RefreshToken', refreshTokens.refreshToken, {
-					path: '/'
-				});
-
-				if (!isPublicPath) {
-					return redirect(303, '/tag-groups');
-				}
-			} catch (error) {
-				event.cookies.delete('Authorization', {
-					path: '/'
-				});
-
-				event.cookies.delete('RefreshToken', {
-					path: '/'
-				});
-
-				return redirect(303, '/sign-in');
-			}
-		}
+		api.setAuthorization(event.locals.accessToken, event.locals.refreshToken);
 	}
 
 	return await resolve(event);
+};
+
+const validateAndUpdateTokens = async (event: RequestEvent) => {
+	const accessTokenTime = parseJwt(event.locals.accessToken!).exp;
+
+	if (accessTokenTime && accessTokenTime < Date.now() / 1000) {
+		const { accessToken, refreshToken } = await refreshTokens({
+			accessToken: event.locals.accessToken!,
+			refreshToken: event.locals.refreshToken!
+		});
+
+		event.locals.accessToken = accessToken;
+		event.locals.refreshToken = refreshToken;
+
+		setAuthorizationCookies(event, accessToken, refreshToken);
+	}
 };

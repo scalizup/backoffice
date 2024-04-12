@@ -1,29 +1,21 @@
-import { api } from '$lib';
 import { superValidate } from 'sveltekit-superforms';
-import type { PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { createSchemaStep2 } from '$lib/components/products/schemas';
+import { getAllTagGroupsWithTags } from '$lib/api/contracts/tag_groups/queries/getAllTagGroupsWithTags';
+import type { Actions, PageServerLoad } from './$types';
+import { getTagGroupWithTagsBySearchTerm } from '$lib/api/contracts/tag_groups/queries/getTagGroupWithTagsBySearchTerm';
 
-export const load: PageServerLoad = async ({ params, url, locals, request }) => {
+export const load: PageServerLoad = async ({ params, url, setHeaders }) => {
 	const page = url.searchParams.get('page') || '1';
 
-	// const response = await api.(
-	// 	{
-	// 		PageNumber: params ? parseInt(page) : 1,
-	// 		PageSize: 5
-	// 	},
-	// 	{
-	// 		headers: {
-	// 			RefreshToken: locals.refreshToken!,
-	// 			Authorization: locals.accessToken!
-	// 		}
-	// 	}
-	// );
-
-	// redirectIfNoItems(response.data, `/tag-groups`);
+	const response = await getAllTagGroupsWithTags({
+		pageNumber: params ? parseInt(page) : 1,
+		pageSize: 50
+	});
 
 	return {
 		response: {
+			tags: response,
 			products: [
 				{
 					id: 1,
@@ -217,4 +209,14 @@ export const load: PageServerLoad = async ({ params, url, locals, request }) => 
 			create: await superValidate(zod(createSchemaStep2))
 		}
 	};
+};
+
+export const actions: Actions = {
+	getTagGroupsWithTagsBySearchTerm: async ({ request }) => {
+		const data = await request.formData();
+
+		const response = await getTagGroupWithTagsBySearchTerm(data.get('searchTerm') as string);
+
+		return response;
+	}
 };

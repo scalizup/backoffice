@@ -1,7 +1,7 @@
 <script lang="ts">
-	import DialogCreateProduct from '$lib/components/products/dialog/dialog-create-product.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import DialogCreateProduct from '$lib/components/products/dialog/dialog-create-product.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { ListFilter, Search } from 'lucide-svelte';
 	import { Pencil, Trash2 } from 'lucide-svelte/icons';
@@ -15,7 +15,7 @@
 	<div>
 		<span class="font-bold">Products Management</span>
 	</div>
-	<DialogCreateProduct form={data.forms.create} />
+	<DialogCreateProduct tagCategoriesWithTags={data.response.tags} form={data.forms.create} />
 </div>
 
 {#if data.response.products.length == 0}
