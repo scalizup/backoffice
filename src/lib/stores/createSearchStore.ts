@@ -1,4 +1,3 @@
-import type { PaginatedData } from '$lib/api/contracts/common/paginated_data';
 import { writable } from 'svelte/store';
 
 export interface SearchStoreModel<T> {
@@ -8,16 +7,13 @@ export interface SearchStoreModel<T> {
 	selectedData: T[];
 }
 
-// add generic
-export const createSearchStore = <T>(data: { items: T[] }) => {
+export const createSearchStore = <T>(data: T[]) => {
 	const { subscribe, set, update } = writable<SearchStoreModel<T>>({
 		data: data.items,
 		filtered: data.items,
 		search: '',
 		selectedData: []
 	});
-
-	// add types to
 
 	return {
 		subscribe,

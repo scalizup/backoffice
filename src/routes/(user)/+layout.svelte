@@ -1,22 +1,26 @@
 <script lang="ts">
 	import { Toaster } from 'svelte-sonner';
-	import CircleUser from 'lucide-svelte/icons/circle-user';
-	import LineChart from 'lucide-svelte/icons/line-chart';
-	import Package from 'lucide-svelte/icons/package';
-	import Home from 'lucide-svelte/icons/home';
-	import ShoppingCart from 'lucide-svelte/icons/shopping-cart';
-	import Bell from 'lucide-svelte/icons/bell';
-	import Menu from 'lucide-svelte/icons/menu';
-	import Package2 from 'lucide-svelte/icons/package-2';
-	import Search from 'lucide-svelte/icons/search';
-	import Users from 'lucide-svelte/icons/users';
-	import { Badge } from '$lib/components/ui/badge/index.js';
+	import {
+		Bell,
+		Menu,
+		Package2,
+		Settings,
+		ShoppingCart,
+		CircleUser,
+		Package,
+		Home
+	} from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
 	import Navlink from './navlink.svelte';
+	import { redirect } from '@sveltejs/kit';
+	import { enhance } from '$app/forms';
+
+	let formElement: HTMLFormElement;
+
+	export let data;
 </script>
 
 <Toaster richColors />
@@ -27,7 +31,7 @@
 			<div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
 				<a href="/" class="flex items-center gap-2 font-semibold">
 					<Package2 class="h-6 w-6" />
-					<span class="">Your Tenant</span>
+					<span class="">{data.user.tenant.name}</span>
 				</a>
 				<Button variant="outline" size="icon" class="ml-auto h-8 w-8">
 					<Bell class="h-4 w-4" />
@@ -39,6 +43,7 @@
 					<Navlink href="/tag-groups" title="Tag Groups" icon={Home} />
 					<!-- <Navlink href="/tags" title="Tags" icon={Package} /> -->
 					<Navlink href="/products" title="Products" icon={ShoppingCart} />
+					<Navlink href="/settings" title="Settings" icon={Settings} />
 					<!-- <Navlink href="/customers" title="Customers" icon={Users} />
 					<Navlink href="/analytics" title="Analytics" icon={LineChart} /> -->
 				</nav>
@@ -100,12 +105,17 @@
 					</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end">
-					<DropdownMenu.Label>My Account</DropdownMenu.Label>
+					<DropdownMenu.Label>{data.user.username}</DropdownMenu.Label>
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item>Settings</DropdownMenu.Item>
 					<DropdownMenu.Item>Support</DropdownMenu.Item>
 					<DropdownMenu.Separator />
-					<DropdownMenu.Item>Logout</DropdownMenu.Item>
+
+					<form method="post" action="/" use:enhance bind:this={formElement}>
+						<DropdownMenu.Item on:click={(e) => formElement.requestSubmit()}>
+							Logout
+						</DropdownMenu.Item>
+					</form>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</header>

@@ -28,13 +28,31 @@ export const createSchemaStep1 = z.object({
 		})
 		.optional()
 		.nullish()
-		.or(z.literal('').transform(() => null))
+		.or(z.literal('').transform(() => null)),
+	image: z
+		.instanceof(File, { message: 'Please upload a file.' })
+		.refine((f) => f.size < 10_000_000, 'Max 10 MB upload size.')
+		.optional()
 });
 
 export type CreateSchemaStep1 = typeof createSchemaStep1;
 
 export const createSchemaStep2 = createSchemaStep1.extend({
-	tags: z.array(z.string()).nonempty()
+	tagIds: z.number().array().nonempty({
+		message: 'Product must have at least one tag'
+	})
 });
 
 export type CreateSchemaStep2 = typeof createSchemaStep2;
+
+export const deleteSchema = z.object({
+	id: z.number().min(1)
+});
+
+export const updateSchema = createSchemaStep1.extend({
+	id: z.number().min(1)
+});
+
+export const updateSchemaStep2 = createSchemaStep2.extend({
+	id: z.number().min(1)
+});

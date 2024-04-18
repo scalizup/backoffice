@@ -1,6 +1,5 @@
-import { refreshTokens } from '$lib/api/contracts/auth/commands/refreshTokens';
-import api from '$lib/api/contracts/common/api';
-import paths from '$lib/api/contracts/common/paths';
+import api from '$lib/api/api';
+import paths from '$lib/api/utils/paths';
 import { setAuthorizationCookies } from '$lib/helpers/setAuthorizationCookies';
 import { redirect, type Handle, type RequestEvent } from '@sveltejs/kit';
 
@@ -29,11 +28,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (isLoggedIn) {
 		await validateAndUpdateTokens(event);
 
+		api.setAuthorization(event.locals.accessToken, event.locals.refreshToken);
+
 		if (isPublicPath) {
 			return redirect(303, paths.tagGroups);
 		}
-
-		api.setAuthorization(event.locals.accessToken, event.locals.refreshToken);
 	}
 
 	return await resolve(event);
@@ -43,7 +42,7 @@ const validateAndUpdateTokens = async (event: RequestEvent) => {
 	const accessTokenTime = parseJwt(event.locals.accessToken!).exp;
 
 	if (accessTokenTime && accessTokenTime < Date.now() / 1000) {
-		const { accessToken, refreshToken } = await refreshTokens({
+		const { accessToken, refreshToken } = await api.auth.refreshTokens({
 			accessToken: event.locals.accessToken!,
 			refreshToken: event.locals.refreshToken!
 		});

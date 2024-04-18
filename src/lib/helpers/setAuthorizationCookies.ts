@@ -5,7 +5,7 @@ export const setAuthorizationCookies = async (
 	accessToken: string,
 	refreshToken: string
 ) => {
-	event.cookies.set('Authorization', `Bearer ${accessToken}`, {
+	event.cookies.set('Authorization', accessToken, {
 		sameSite: 'strict',
 		path: '/',
 		httpOnly: true

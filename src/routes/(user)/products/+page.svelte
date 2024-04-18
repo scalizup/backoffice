@@ -4,9 +4,10 @@
 	import DialogCreateProduct from '$lib/components/products/dialog/dialog-create-product.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { ListFilter, Search } from 'lucide-svelte';
-	import { Pencil, Trash2 } from 'lucide-svelte/icons';
-	import DialogSeeProductTags from '$lib/components/products/dialog/dialog-see-product-tags.svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
+	import DialogDeleteProduct from '$lib/components/products/dialog/dialog-delete-product.svelte';
+	import DialogUpdateProduct from '$lib/components/products/dialog/dialog-update-product.svelte';
+	import DialogEditProductTags from '$lib/components/products/dialog/dialog-edit-product-tags.svelte';
 
 	export let data;
 </script>
@@ -43,29 +44,36 @@
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>
-	<div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6">
+	<div class="grid grid-cols-2 gap-2 lg:grid-cols-4 xl:grid-cols-6">
 		{#each data.response.products as product}
 			<Card.Root class="flex flex-col justify-between">
 				<Card.Header>
-					<div class="relative h-32 w-full">
-						<img
-							src={product.imageUrl}
-							alt={product.name}
-							class="h-full w-full rounded-lg object-cover"
-						/>
-					</div>
+					{#if product.imageUrl !== null}
+						<div class="relative h-48 w-full">
+							<img
+								src={product.imageUrl}
+								alt={product.name}
+								class="h-full w-full rounded-lg object-cover"
+							/>
+						</div>
+					{/if}
 					<Card.Title>{product.name}</Card.Title>
-					<Card.Description>{product.price} $</Card.Description>
+					{#if product.price !== null}
+						<Card.Description>{product.price} $</Card.Description>
+					{/if}
+					{#if product.description !== null}
+						<Card.Description>{product.description}</Card.Description>
+					{/if}
 				</Card.Header>
 				<Card.Footer class="gap-2">
-					<DialogSeeProductTags productName={product.name} tags={product.tags} />
+					<DialogEditProductTags
+						tagCategoriesWithTags={data.response.tags}
+						{product}
+						form={data.forms.updateTags}
+					/>
 					<div class="flex gap-2">
-						<Button variant="outline" size="sm" class="w-full">
-							<Pencil class="h-4 w-4" />
-						</Button>
-						<Button variant="outline" size="sm" class="w-full">
-							<Trash2 class="h-4 w-4" />
-						</Button>
+						<DialogUpdateProduct {product} form={data.forms.update} />
+						<DialogDeleteProduct {product} form={data.forms.delete} />
 					</div>
 				</Card.Footer>
 			</Card.Root>

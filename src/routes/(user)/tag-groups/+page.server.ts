@@ -2,28 +2,21 @@ import type { PageServerLoad } from './$types';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { createSchema, deleteSchema, updateSchema } from '$lib/components/tag-groups/schemas';
-import { api, redirectIfNoItems } from '$lib';
+import api from '$lib/api/api';
+import { redirectIfNoItems } from '$lib';
 
 export const load: PageServerLoad = async ({ params, url, locals, request }) => {
 	const page = url.searchParams.get('page') || '1';
 
-	const response = await api.tagGroupList(
-		{
-			PageNumber: params ? parseInt(page) : 1,
-			PageSize: 5
-		},
-		{
-			headers: {
-				RefreshToken: locals.refreshToken!,
-				Authorization: locals.accessToken!
-			}
-		}
-	);
+	const response = await api.tagGroups.getAll({
+		pageNumber: params ? parseInt(page) : 1,
+		pageSize: 5
+	});
 
-	redirectIfNoItems(response.data, `/tag-groups`);
+	redirectIfNoItems(response, `/tag-groups`);
 
 	return {
-		response: response.data,
+		response: response,
 		forms: {
 			create: await superValidate(zod(createSchema)),
 			update: await superValidate(zod(updateSchema)),
@@ -41,17 +34,9 @@ export const actions = {
 			});
 		}
 
-		await api.tagGroupCreate(
-			{
-				name: form.data.name
-			},
-			{
-				headers: {
-					RefreshToken: event.locals.refreshToken!,
-					Authorization: event.locals.accessToken!
-				}
-			}
-		);
+		await api.tagGroups.post({
+			name: form.data.name
+		});
 
 		return {
 			form
@@ -65,18 +50,10 @@ export const actions = {
 			});
 		}
 
-		await api.tagGroupPartialUpdate(
-			{
-				id: form.data.id,
-				name: form.data.name
-			},
-			{
-				headers: {
-					RefreshToken: event.locals.refreshToken!,
-					Authorization: event.locals.accessToken!
-				}
-			}
-		);
+		await api.tagGroups.patch({
+			id: form.data.id,
+			name: form.data.name
+		});
 
 		return {
 			form
@@ -90,12 +67,7 @@ export const actions = {
 			});
 		}
 
-		await api.tagGroupDelete(form.data.id, {
-			headers: {
-				RefreshToken: event.locals.refreshToken!,
-				Authorization: event.locals.accessToken!
-			}
-		});
+		await api.tagGroups.delete(form.data.id);
 
 		return {
 			form
