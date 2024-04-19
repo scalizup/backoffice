@@ -34,6 +34,10 @@ class Api {
 		return clients.auth;
 	}
 
+	get menuSort() {
+		return clients.menuSort;
+	}
+
 	get axiosInstance() {
 		return axios.create({
 			baseURL: `http://${this.basePath}/api/`,

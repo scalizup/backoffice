@@ -48,6 +48,7 @@
 		{#each data.response.products as product}
 			<Card.Root class="flex flex-col justify-between">
 				<Card.Header>
+					<Card.Title>{product.name}</Card.Title>
 					{#if product.imageUrl !== null}
 						<div class="relative h-48 w-full">
 							<img
@@ -57,7 +58,6 @@
 							/>
 						</div>
 					{/if}
-					<Card.Title>{product.name}</Card.Title>
 					{#if product.price !== null}
 						<Card.Description>{product.price} $</Card.Description>
 					{/if}
